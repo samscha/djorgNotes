@@ -55,17 +55,17 @@ export const NOTE_ADD_SUCCESS = 'NOTE_ADD_SUCCESS';
 export const NOTE_ADD_ERROR = 'NOTE_ADD_ERROR';
 export const NOTE_ADD_FINISH = 'NOTE_ADDE_FINISH';
 
-const ROOT = process.env.config
-  ? JSON.parse(process.env.config).urls.ROOT
-  : config.urls.ROOT;
+const ROOT = process.env.ROOT ? process.env.ROOT : config.urls.ROOT;
 
-const login_uri = process.env.config
-  ? JSON.parse(process.env.config).urls.login
+const login_uri = process.env.login_uri
+  ? process.env.login_uri
   : config.urls.login;
 
-const notes_uri = process.env.config
-  ? JSON.parse(process.env.config).urls.notes
+const notes_uri = process.env.notes_uri
+  ? process.env.notes_uri
   : config.urls.notes;
+
+const appK = process.env.appK ? process.env.appK : config.appK;
 
 export const resetErrors = _ => {
   return dispatch => {
@@ -83,7 +83,7 @@ export const authenticateUser = username => {
 
     // axios
     //   .get(`${ROOT}/users/validate`, {
-    //     headers: { authorization: localStorage.getItem(config.appK) },
+    //     headers: { authorization: localStorage.getItem(appK) },
     //   })
     //   .then(({ data }) => {
     //     dispatch({ type: AUTH_LOGIN_SUCCESS, payload: data.username });
@@ -140,7 +140,7 @@ export const register = (username, password, confirmPassword, history) => {
     //     axios
     //       .post(`${ROOT}/users/login`, { username, password })
     //       .then(({ data }) => {
-    //         localStorage.setItem(config.appK, data.token);
+    //         localStorage.setItem(appK, data.token);
 
     //         dispatch({ type: AUTH_LOGIN_SUCCESS, payload: username });
 
@@ -181,8 +181,8 @@ export const login = (username, password, history) => {
         password,
       })
       .then(response => {
-        localStorage.setItem(config.appK, response.data.token);
-        localStorage.setItem(config.appK + ',user', username);
+        localStorage.setItem(appK, response.data.token);
+        localStorage.setItem(appK + ',user', username);
 
         dispatch({ type: AUTH_ERROR_RESET });
 
@@ -205,8 +205,8 @@ export const logout = history => {
   return dispatch => {
     dispatch({ type: AUTH_LOGOUT_START });
 
-    localStorage.removeItem(config.appK);
-    localStorage.removeItem(config.appK + ',user');
+    localStorage.removeItem(appK);
+    localStorage.removeItem(appK + ',user');
 
     dispatch({ type: AUTH_LOGOUT_SUCCESS });
 
@@ -255,7 +255,7 @@ export const editNote = note => {
         },
         {
           headers: {
-            Authorization: `Token ${localStorage.getItem(config.appK)}`,
+            Authorization: `Token ${localStorage.getItem(appK)}`,
           },
         },
       )
@@ -280,7 +280,7 @@ export const deleteNote = id => {
     axios
       .delete(`${ROOT}/${notes_uri}/${id}/`, {
         headers: {
-          Authorization: `Token ${localStorage.getItem(config.appK)}`,
+          Authorization: `Token ${localStorage.getItem(appK)}`,
         },
       })
       .then(_ => {
@@ -304,7 +304,7 @@ export const addNote = note => {
         { title: note.title, content: note.content },
         {
           headers: {
-            Authorization: `Token ${localStorage.getItem(config.appK)}`,
+            Authorization: `Token ${localStorage.getItem(appK)}`,
           },
         },
       )
