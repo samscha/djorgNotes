@@ -225,7 +225,8 @@ export const getNotes = _ => {
     dispatch({ type: NOTES_FETCH_START });
 
     axios
-      .get(`${ROOT}/${notes_uri}/`)
+      // .get(`${ROOT}/${notes_uri}/`)
+      .get(`https://djorg-fwcdga48i.herokuapp.com/api/notes/`)
       .then(({ data }) => {
         const notes = data.map(note => {
           const new_note = {};
