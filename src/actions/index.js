@@ -1,8 +1,7 @@
 import axios from 'axios';
+import config from '../config';
 
 axios.defaults.withCredentials = true;
-
-const appK = 'com.herokuapp.djorg-fwcdga48i';
 
 export const AUTH_USER_AUTHENTICATED = 'AUTH_USER_AUTHENTICATED';
 export const AUTH_USER_UNAUTHENTICATED = 'AUTH_USER_UNAUTHENTICATED';
@@ -55,7 +54,17 @@ export const NOTE_ADD_SUCCESS = 'NOTE_ADD_SUCCESS';
 export const NOTE_ADD_ERROR = 'NOTE_ADD_ERROR';
 export const NOTE_ADD_FINISH = 'NOTE_ADDE_FINISH';
 
-// const ROOT = 'http://127.0.0.1:8000';
+const ROOT = process.env.config
+  ? JSON.parse(process.env.config).urls.ROOT
+  : config.urls.ROOT;
+
+const login_uri = process.env.config
+  ? JSON.parse(process.env.config).urls.login
+  : config.urls.login;
+
+const notes_uri = process.env.config
+  ? JSON.parse(process.env.config).urls.notes
+  : config.urls.notes;
 
 export const resetErrors = _ => {
   return dispatch => {
@@ -73,7 +82,7 @@ export const authenticateUser = username => {
 
     // axios
     //   .get(`${ROOT}/users/validate`, {
-    //     headers: { authorization: localStorage.getItem(appK) },
+    //     headers: { authorization: localStorage.getItem(config.appK) },
     //   })
     //   .then(({ data }) => {
     //     dispatch({ type: AUTH_LOGIN_SUCCESS, payload: data.username });
@@ -130,7 +139,7 @@ export const register = (username, password, confirmPassword, history) => {
     //     axios
     //       .post(`${ROOT}/users/login`, { username, password })
     //       .then(({ data }) => {
-    //         localStorage.setItem(appK, data.token);
+    //         localStorage.setItem(config.appK, data.token);
 
     //         dispatch({ type: AUTH_LOGIN_SUCCESS, payload: username });
 
@@ -166,10 +175,13 @@ export const login = (username, password, history) => {
     dispatch({ type: AUTH_LOGIN_START });
 
     axios
-      .post(`/auth`, { username, password })
+      .post(`${ROOT}/${login_uri}`, {
+        username,
+        password,
+      })
       .then(response => {
-        localStorage.setItem(appK, response.data.token);
-        localStorage.setItem(appK + ',user', username);
+        localStorage.setItem(config.appK, response.data.token);
+        localStorage.setItem(config.appK + ',user', username);
 
         dispatch({ type: AUTH_ERROR_RESET });
 
@@ -192,8 +204,8 @@ export const logout = history => {
   return dispatch => {
     dispatch({ type: AUTH_LOGOUT_START });
 
-    localStorage.removeItem(appK);
-    localStorage.removeItem(appK + ',user');
+    localStorage.removeItem(config.appK);
+    localStorage.removeItem(config.appK + ',user');
 
     dispatch({ type: AUTH_LOGOUT_SUCCESS });
 
@@ -208,7 +220,7 @@ export const getNotes = _ => {
     dispatch({ type: NOTES_FETCH_START });
 
     axios
-      .get(`/api/notes`)
+      .get(`${ROOT}/${notes_uri}`)
       .then(({ data }) => {
         const notes = data.map(note => {
           const new_note = {};
@@ -235,14 +247,14 @@ export const editNote = note => {
 
     axios
       .put(
-        `/api/notes/${note.id}/`,
+        `${ROOT}/${notes_uri}/${note.id}/`,
         {
           title: note.title,
           content: note.content,
         },
         {
           headers: {
-            Authorization: `Token ${localStorage.getItem(appK)}`,
+            Authorization: `Token ${localStorage.getItem(config.appK)}`,
           },
         },
       )
@@ -265,9 +277,9 @@ export const deleteNote = id => {
     dispatch({ type: NOTE_DELETE_START });
 
     axios
-      .delete(`/api/notes/${id}/`, {
+      .delete(`${ROOT}/${notes_uri}/${id}/`, {
         headers: {
-          Authorization: `Token ${localStorage.getItem(appK)}`,
+          Authorization: `Token ${localStorage.getItem(config.appK)}`,
         },
       })
       .then(_ => {
@@ -287,9 +299,13 @@ export const addNote = note => {
 
     axios
       .post(
-        `/api/notes/`,
+        `${ROOT}/${notes_uri}/`,
         { title: note.title, content: note.content },
-        { headers: { Authorization: `Token ${localStorage.getItem(appK)}` } },
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem(config.appK)}`,
+          },
+        },
       )
       .then(({ data }) => {
         const note = { ...data, _id: data.id };
