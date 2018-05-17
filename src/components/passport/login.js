@@ -8,7 +8,7 @@ import { login, resetErrors } from '../../actions';
 
 import Header from '../app/header';
 
-const appK = 'com.herokuapp.djorg-fwcdga48i';
+const appK = 'com.herokuapp.djorgnotes-fwcdga48i';
 
 class Login extends Component {
   componentWillMount() {

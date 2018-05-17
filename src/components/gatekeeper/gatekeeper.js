@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { authenticateUser } from '../../actions';
 
-const appK = 'com.herokuapp.djorg-fwcdga48i';
+const appK = 'com.herokuapp.djorgnotes-fwcdga48i';
 
 export default ComposedComponent => {
   class CheckAuthentication extends Component {

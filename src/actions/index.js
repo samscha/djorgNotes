@@ -1,6 +1,6 @@
 import axios from 'axios';
 // import config from '../config';
-const config = {};
+// const config = {};
 
 axios.defaults.withCredentials = true;
 
@@ -55,17 +55,21 @@ export const NOTE_ADD_SUCCESS = 'NOTE_ADD_SUCCESS';
 export const NOTE_ADD_ERROR = 'NOTE_ADD_ERROR';
 export const NOTE_ADD_FINISH = 'NOTE_ADDE_FINISH';
 
-const ROOT = process.env.ROOT ? process.env.ROOT : config.urls.ROOT;
+// const ROOT = process.env.ROOT ? process.env.ROOT : config.urls.ROOT;
+const ROOT = 'https://djorg-fwcdga48i.herokuapp.com';
+const login_uri = 'auth';
+const notes_uri = 'api/notes';
+const appK = 'com.herokuapp.djorgnotes-fwcdga48i';
 
-const login_uri = process.env.login_uri
-  ? process.env.login_uri
-  : config.urls.login;
+// const login_uri = process.env.login_uri
+//   ? process.env.login_uri
+//   : config.urls.login;
 
-const notes_uri = process.env.notes_uri
-  ? process.env.notes_uri
-  : config.urls.notes;
+// const notes_uri = process.env.notes_uri
+//   ? process.env.notes_uri
+//   : config.urls.notes;
 
-const appK = process.env.appK ? process.env.appK : config.appK;
+// const appK = process.env.appK ? process.env.appK : config.appK;
 
 export const resetErrors = _ => {
   return dispatch => {
