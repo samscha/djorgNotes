@@ -1,6 +1,6 @@
 import axios from 'axios';
 // import config from '../config';
-config = {};
+const config = {};
 
 axios.defaults.withCredentials = true;
 
